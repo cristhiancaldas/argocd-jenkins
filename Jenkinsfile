@@ -9,8 +9,10 @@ pipeline {
   environment {
      docker_repo = "crist"
      ImageName = 'jenkins-docker-hub'
-     AppName = "message"
-     ImageTag="v1"
+     AppName = "argocd-jenkins"
+     DOCKER_USER = "crist"
+     IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
+     IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
   }
 
     stages {
@@ -51,6 +53,33 @@ pipeline {
             }
     }
 
+    stage("Docker Build") {
+             steps {
+                 dir("${WORKSPACE}") {
+                     docker_image = docker.build "${IMAGE_NAME}"
+                 }
+             }
+    }
+
+    stage("Docker Push") {
+             steps {
+                 dir("${WORKSPACE}") {
+                     docker.withRegistry('','docker-hub') {
+                             docker_image.push("${IMAGE_TAG}")
+                             docker_image.push('latest')
+                     }
+                 }
+             }
+    }
+
+    stage ('Cleanup Artifacts') {
+            steps {
+                script {
+                    sh "docker rmi ${IMAGE_NAME}:${IMAGE_TAG}"
+                    sh "docker rmi ${IMAGE_NAME}:latest"
+                }
+            }
+        }
     }
 }
 
