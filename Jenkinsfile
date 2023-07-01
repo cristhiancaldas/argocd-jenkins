@@ -23,11 +23,11 @@ pipeline {
 
      stage("Checkout from SCM"){
            steps {
-               git branch: 'main', credentialsId: 'github', url: 'https://github.com/dmancloud/complete-prodcution-e2e-pipeline'
+               git branch: 'main', credentialsId: 'github-token', url: 'https://github.com/cristhiancaldas/argocd-jenkins.git'
            }
      }
 
-     stage('🚀 Build-Maven'){
+     stage('Build-Maven'){
            steps {
              dir("${WORKSPACE}") {
                sh "mvn clean package"
@@ -41,10 +41,10 @@ pipeline {
            }
      }
 
-    stage('🚀 SonarQube Analysis') {
+    stage('SonarQube Analysis') {
             steps {
                 script {
-                    withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
+                    withSonarQubeEnv(credentialsId: 'sonar-token') {
                         sh "mvn sonar:sonar"
                     }
                 }
