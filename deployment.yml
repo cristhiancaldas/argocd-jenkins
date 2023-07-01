@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-argocd
+  labels:
+    app: backend-argocd
+spec:
+  selector:
+    matchLabels:
+      app: backend-argocd
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: backend-argocd
+    spec:
+      containers:
+        - name: backend-argocd
+          image: crist/argocd-jenkins:latest
+          ports:
+            - containerPort: 8080
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-argocd
+spec:
+  selector:
+    app: backend-argocd
+  type: LoadBalancer
+  ports:
+    - name: port-message
+      protocol: TCP
+      port: 8080

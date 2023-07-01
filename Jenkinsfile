@@ -91,26 +91,18 @@ pipeline {
                 }
             }
         }
-    }
-}
 
-/*
-def dockerCleanupCall(String project, String hubUser) {
-    sh "docker rmi ${hubUser}/${project}:${ImageTag}"
-    sh "docker rmi ${hubUser}/${project}:latest"
-}*/
-
-def dockerBuildCall(String project, String hubUser) {
-    sh "docker image build -t ${hubUser}/${project} ."
-    sh "docker tag ${hubUser}/${project} ${hubUser}/${project}:${ImageTag}"
-    sh "docker tag ${hubUser}/${project} ${hubUser}/${project}:latest"
-    withCredentials([usernamePassword(
-            credentialsId: "docker-hub",
-            usernameVariable: "USER",
-            passwordVariable: "PASS"
-    )]) {
-        sh "docker login -u '$USER' -p '$PASS'"
+    stage('Update Kubernetes deployment file'){
+        steps{
+          script {
+             sh """
+             cat deployment.yml
+             sed -i 's/${DOCKER_USER}.*/${IMAGE_NAME}:${IMAGE_TAG}/g' deployment.yml
+             cat deployment.yml
+             """
+          }
+        }
     }
-    sh "docker image push ${hubUser}/${project}:${ImageTag}"
-    sh "docker image push ${hubUser}/${project}:latest"
+
+    }
 }
