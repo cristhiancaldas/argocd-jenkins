@@ -56,8 +56,10 @@ pipeline {
     stage("Docker Build") {
              steps {
                  dir("${WORKSPACE}") {
+                 script {
                   docker.withRegistry('','docker-hub') {
                      docker_image = docker.build "${IMAGE_NAME}"
+                  }
                   }
                  }
              }
@@ -66,9 +68,11 @@ pipeline {
     stage("Docker Push") {
              steps {
                  dir("${WORKSPACE}") {
+                   script {
                      docker.withRegistry('','docker-hub') {
                              docker_image.push("${IMAGE_TAG}")
                              docker_image.push('latest')
+                     }
                      }
                  }
              }
