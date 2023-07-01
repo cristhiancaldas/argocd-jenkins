@@ -12,7 +12,7 @@ pipeline {
      APP_NAME = "argocd-jenkins"
      DOCKER_USER = "crist"
      IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
-     IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
+     IMAGE_TAG = "${BUILD_NUMBER}"
   }
 
     stages {
