@@ -9,7 +9,7 @@ pipeline {
   environment {
      docker_repo = "crist"
      ImageName = 'jenkins-docker-hub'
-     AppName = "argocd-jenkins"
+     APP_NAME = "argocd-jenkins"
      DOCKER_USER = "crist"
      IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
      IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
