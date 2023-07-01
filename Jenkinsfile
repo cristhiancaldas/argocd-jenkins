@@ -56,7 +56,9 @@ pipeline {
     stage("Docker Build") {
              steps {
                  dir("${WORKSPACE}") {
+                  docker.withRegistry('','docker-hub') {
                      docker_image = docker.build "${IMAGE_NAME}"
+                  }
                  }
              }
     }
