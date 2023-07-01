@@ -54,25 +54,30 @@ pipeline {
     }
 
     stage("Docker Build") {
-             steps {
+            steps {
                  dir("${WORKSPACE}") {
                  script {
-                  docker.withRegistry('','docker-hub') {
-                     docker_image = docker.build "${IMAGE_NAME}"
-                  }
-                  }
+                       sh "docker image build -t ${IMAGE_NAME} ."
+                       sh "docker tag ${IMAGE_NAME} ${IMAGE_NAME}:${IMAGE_TAG}"
+                       sh "docker tag ${IMAGE_NAME} ${IMAGE_NAME}:latest"
+                    }
                  }
-             }
+            }
     }
 
     stage("Docker Push") {
              steps {
                  dir("${WORKSPACE}") {
                    script {
-                     docker.withRegistry('','docker-hub') {
-                             docker_image.push("${IMAGE_TAG}")
-                             docker_image.push('latest')
-                     }
+                    withCredentials([usernamePassword(
+                                credentialsId: "docker-hub",
+                                usernameVariable: "USER",
+                                passwordVariable: "PASS"
+                        )]) {
+                            sh "docker login -u '$USER' -p '$PASS'"
+                        }
+                        sh "docker image push ${IMAGE_NAME}:${IMAGE_TAG}"
+                        sh "docker image push ${IMAGE_NAME}:latest"
                      }
                  }
              }
@@ -94,3 +99,18 @@ def dockerCleanupCall(String project, String hubUser) {
     sh "docker rmi ${hubUser}/${project}:${ImageTag}"
     sh "docker rmi ${hubUser}/${project}:latest"
 }*/
+
+def dockerBuildCall(String project, String hubUser) {
+    sh "docker image build -t ${hubUser}/${project} ."
+    sh "docker tag ${hubUser}/${project} ${hubUser}/${project}:${ImageTag}"
+    sh "docker tag ${hubUser}/${project} ${hubUser}/${project}:latest"
+    withCredentials([usernamePassword(
+            credentialsId: "docker-hub",
+            usernameVariable: "USER",
+            passwordVariable: "PASS"
+    )]) {
+        sh "docker login -u '$USER' -p '$PASS'"
+    }
+    sh "docker image push ${hubUser}/${project}:${ImageTag}"
+    sh "docker image push ${hubUser}/${project}:latest"
+}
