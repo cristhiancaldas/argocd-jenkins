@@ -13,6 +13,7 @@ pipeline {
      DOCKER_USER = "crist"
      IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
      IMAGE_TAG = "${BUILD_NUMBER}"
+     REPOSITORY_GITHUB = "https://github.com/cristhiancaldas/argocd-jenkins.git"
   }
 
     stages {
@@ -101,6 +102,22 @@ pipeline {
              cat deployment.yml
              """
           }
+        }
+    }
+
+    stage('Push changed deployment file to Git'){
+        steps{
+           script {
+              sh """
+                 git config --global user.name "ccargocd"
+                 git config --global user.email "cargocd@gmail.com"
+                 git add deployment.yml
+                 git commit -m "update deployment file"
+              """
+              withCredentials([gitUsernamePassword(credentialsId: 'github-token', gitToolName: 'Default')]) {
+                    sh "git push origin ${REPOSITORY_GITHUB}  main "
+              }
+           }
         }
     }
 
