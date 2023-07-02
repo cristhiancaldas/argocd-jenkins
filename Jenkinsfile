@@ -116,7 +116,7 @@ pipeline {
                  git commit -m "update deployment file"
               """
               withCredentials([gitUsernamePassword(credentialsId: 'github-token', gitToolName: 'Default')]) {
-                    sh "git push origin ${REPOSITORY_GITHUB}  main "
+                    sh "git push  ${REPOSITORY_GITHUB}  main "
               }
            }
         }
