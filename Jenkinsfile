@@ -111,12 +111,12 @@ pipeline {
            script {
               sh """
                  git config --global user.name "ccargocd"
-                 git config --global user.email "cargocd@gmail.com"
+                 git config --global user.email "c.caldas.m@gmail.com"
                  git add deployment.yml
                  git commit -m "update deployment file"
               """
               withCredentials([gitUsernamePassword(credentialsId: 'github-token', gitToolName: 'Default')]) {
-                    sh "git push  ${REPOSITORY_GITHUB}  main "
+                    sh "git push  https://github.com/cristhiancaldas/argocd-jenkins.git  main"
               }
            }
         }
