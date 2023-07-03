@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: backend-argocd
-          image: crist/argocd-jenkins:22
+          image: crist/argocd-jenkins:24
           ports:
             - containerPort: 8080
 
