@@ -29,7 +29,7 @@ metadata:
 spec:
   selector:
     app: backend-argocd
-  type: LoadBalancer
+  type: NodePort
   ports:
     - name: port-message
       protocol: TCP

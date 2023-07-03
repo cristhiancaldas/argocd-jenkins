@@ -117,10 +117,6 @@ pipeline {
                  git commit -m "update deployment file"
               """
               sh "git push https://$GIT_CREDS_PSW@github.com/cristhiancaldas/argocd-jenkins.git"
-             // withCredentials([gitUsernamePassword(credentialsId: 'github-token', gitToolName: 'Default')]) {
-              //       sh "git push https://$GIT_CREDS_USR:$GIT_CREDS_PSW@github.com/$GIT_CREDS_USR/argocd-jenkins.git"
-                    //sh "git push  https://github.com/cristhiancaldas/argocd-jenkins.git  main"
-              //}
            }
         }
     }
