@@ -63,12 +63,17 @@ pipeline {
                        sh "docker image build -t ${IMAGE_NAME} ."
                        sh "docker tag ${IMAGE_NAME} ${IMAGE_NAME}:${IMAGE_TAG}"
                        sh "docker tag ${IMAGE_NAME} ${IMAGE_NAME}:latest"
+
+                       withCredentials([usernamePassword(credentialsId: "docker-hub",usernameVariable: "USER",passwordVariable: "PASS" )])
+                       { sh "docker login -u '$USER' -p '$PASS'" }
+                       sh "docker image push ${IMAGE_NAME}:${IMAGE_TAG}"
+                       sh "docker image push ${IMAGE_NAME}:latest"
                     }
                  }
             }
     }
 
-    stage("Docker Push") {
+    /*stage("Docker Push") {
              steps {
                  dir("${WORKSPACE}") {
                    script {
@@ -84,7 +89,7 @@ pipeline {
                      }
                  }
              }
-    }
+    }*/
 
     stage ('Cleanup Artifacts') {
             steps {
