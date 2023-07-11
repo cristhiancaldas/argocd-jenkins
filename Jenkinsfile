@@ -83,8 +83,10 @@ pipeline {
         }
 
     stage('Trigger ManifestUpdate') {
+     steps {
          echo "triggering updatemanifestjob  ArgoCd"
          build job: 'updatemanifest', parameters: [string(name: 'DOCKERTAG', value: ${IMAGE_TAG})]
+         }
     }
 
     }
