@@ -15,7 +15,7 @@ public class ArgoCdController {
     private ArgocdService argocdService;
     @GetMapping
     public String messageDummy(){
-        return "Dummy - AWS Console-ARGOCD-2023";
+        return "Dummy - AWS Console-ARGOCD-2023-Helm-Argocd";
     }
 
     @GetMapping("/persons")
